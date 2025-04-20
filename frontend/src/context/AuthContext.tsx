@@ -21,21 +21,11 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [client, setClient] = useState<Client | null>(null);
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    const savedClient = localStorage.getItem('client');
-
-    if (savedToken) {
-      setToken(savedToken);
-    }
-
-    if (savedClient) {
-      setClient(JSON.parse(savedClient));
-    }
-  }, []);
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+  const [client, setClient] = useState<Client | null>(() => {
+    const storedClient = localStorage.getItem('client');
+    return storedClient ? JSON.parse(storedClient) : null;
+  });
 
   const login = async (documentId: string, documentType: 'CPF' | 'CNPJ') => {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/auth`, {
@@ -46,9 +36,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (!response.ok) throw new Error('Login inválido');
     const data = await response.json();
+
     setToken(data.token);
     setClient(data.client);
-
     localStorage.setItem('token', data.token);
     localStorage.setItem('client', JSON.stringify(data.client));
   };
@@ -66,5 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => useContext(AuthContext);

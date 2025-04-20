@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import {
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  MenuItem,
+  Alert,
+} from '@mui/material';
 
 export const Login = () => {
   const [documentId, setDocumentId] = useState('');
@@ -20,24 +30,63 @@ export const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#121212',
+        p: 2,
+      }}
+    >
+      <Card sx={{ width: 400, p: 2 }}>
+        <CardContent>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Login
+          </Typography>
 
-      <input
-        placeholder="Digite seu CPF ou CNPJ"
-        value={documentId}
-        onChange={(e) => setDocumentId(e.target.value)}
-        required
-      />
+          <form onSubmit={handleSubmit}>
 
-      <select value={documentType} onChange={(e) => setDocumentType(e.target.value as 'CPF' | 'CNPJ')}>
-        <option value="CPF">CPF</option>
-        <option value="CNPJ">CNPJ</option>
-      </select>
+          <TextField
+              select
+              label="Tipo de documento"
+              fullWidth
+              margin="normal"
+              value={documentType}
+              onChange={(e) => setDocumentType(e.target.value as 'CPF' | 'CNPJ')}
+            >
+              <MenuItem value="CPF">CPF</MenuItem>
+              <MenuItem value="CNPJ">CNPJ</MenuItem>
+            </TextField>
 
-      <button type="submit">Entrar</button>
+            <TextField
+              label="CPF ou CNPJ"
+              fullWidth
+              margin="normal"
+              value={documentId}
+              onChange={(e) => setDocumentId(e.target.value)}
+              required
+            />
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </form>
+            {error && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {error}
+              </Alert>
+            )}
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 3 }}
+            >
+              Entrar
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
