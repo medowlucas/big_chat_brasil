@@ -1,0 +1,60 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=big_chat_db
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    command: npm run start:dev
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+        - VITE_API_URL=http://localhost:3001
+    working_dir: /app
+    command: npm run dev
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: big_chat_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
