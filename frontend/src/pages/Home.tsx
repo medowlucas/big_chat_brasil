@@ -21,11 +21,11 @@ export const Home = () => {
 
         {client?.planType === 'prepaid' ? (
           <Typography variant="body1" color="success.main">
-            Saldo: R${client?.balance?.toFixed(2)}
+            Saldo: R${client?.balance ?? '0.00'} 
           </Typography>
         ) : (
           <Typography variant="body1" color="info.main">
-            Limite disponível: R${client?.limit?.toFixed(2)}
+            Limite disponível: R${client?.limit ?? '0.00'}
           </Typography>
         )}
 

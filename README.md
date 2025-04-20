@@ -6,7 +6,7 @@ Projeto fullstack do desafio técnico da Big Chat Brasil (BCB). Esta plataforma 
 
 ## 🧩 Tecnologias Utilizadas
 
-- **Frontend:** React (ou Next.js)
+- **Frontend:** React
 - **Backend:** NestJS com TypeScript
 - **Banco de Dados:** PostgreSQL
 - **Mensageria:** RabbitMQ
@@ -93,7 +93,23 @@ Visualize o histórico de mensagens e status
 ```bash
 big-chat-brasil/
 ├── backend/     # Backend NestJS
-├── frontend/    # Frontend React/Next
+├── frontend/    # Frontend React
 ├── docker-compose.yml
 └── README.md
+```
+### 📚 Biblitecas
+```bash
+Frontend:
+sonnar - toast
+mui - UI design
+axios - integração API
+router-dom - controle de acesso
+
+Backend:
+ampqlib - integração filas
+swagger - documentação rotas
+jest - testes unitários
+typeORM - conexão postgres
+jwt - autenticação
+class-validator - validação de DTO
 ```

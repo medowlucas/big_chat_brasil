@@ -1,22 +1,32 @@
-// src/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
-import { AuthRequestDto } from './dto/auth-request.dto/auth-request.dto';
+import { Client } from '../entities/client.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  async login(authRequest: AuthRequestDto) {
-    return {
-      token: 'dummyToken123456',
-      client: {
-        id: '1',
+  constructor(private jwtService: JwtService) {}
+
+  async login(documentId: string, documentType: 'CPF' | 'CNPJ') {
+    let client = await Client.findOne({ where: { documentId } });
+
+    client ??= await Client.create({
+        documentId,
+        documentType,
         name: 'Cliente Teste',
-        documentId: authRequest.documentId,
-        documentType: authRequest.documentType,
         active: true,
-        balance: 100.0,
+        balance: 100,
+        limit: 0,
         planType: 'prepaid',
-        limit: 50.0,
-      },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).save();
+
+    const payload = { sub: client.id };
+    const token = this.jwtService.sign(payload);
+
+    return {
+      token,
+      client
     };
   }
 }
