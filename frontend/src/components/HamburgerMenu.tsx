@@ -30,7 +30,7 @@ export const HamburgerMenu = () => {
   const { logout } = useAuth();
 
   return (
-    <header style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
+    <header style={{ display: 'flex', alignItems: 'top', padding: '1rem' }}>
         <Box>
             <IconButton onClick={toggleDrawer} color="inherit">
                 <MenuIcon />
@@ -41,7 +41,7 @@ export const HamburgerMenu = () => {
                     <ListItemIcon><HomeIcon /></ListItemIcon>
                     <ListItemText primary="Início" />
                 </ListItem>
-                <ListItem onClick={() => handleNavigation('/conversas')} sx={{ cursor: 'pointer' }}>
+                <ListItem onClick={() => handleNavigation('/chat')} sx={{ cursor: 'pointer' }}>
                     <ListItemIcon><ChatIcon /></ListItemIcon>
                     <ListItemText primary="Conversas" />
                 </ListItem>
