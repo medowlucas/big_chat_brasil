@@ -1,6 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { AuthRequest } from './dto/auth-request.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -19,8 +20,7 @@ export class AuthController {
       },
     },
   })
-  async login(@Body() body: { documentId: string; documentType: 'CPF' | 'CNPJ' }) {
-    const { documentId, documentType } = body;
-    return this.authService.login(documentId, documentType);
+  async login(@Body() authRequest: AuthRequest ) {
+    return this.authService.login(authRequest);
   }
 }

@@ -8,10 +8,10 @@ import { JwtStrategy } from './jwt.strategy/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Client]), // Registra a entidade Client
+    TypeOrmModule.forFeature([Client]),
     JwtModule.register({
       secret: 'yourSecretKey',
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],

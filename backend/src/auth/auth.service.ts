@@ -1,32 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { Client } from '../entities/client.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+
+import { Client } from '../entities/client.entity';
+import { AuthRequest } from './dto/auth-request.dto';
+import { AuthResponse } from './dto/auth-response.dto';
+import { PlanType } from 'src/enums/plan-type.enum';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    @InjectRepository(Client)
+    private readonly clientRepository: Repository<Client>,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async login(documentId: string, documentType: 'CPF' | 'CNPJ') {
-    let client = await Client.findOne({ where: { documentId } });
+  async login(authRequest: AuthRequest): Promise<AuthResponse> {
+    const { documentId, documentType } = authRequest;
 
-    client ??= await Client.create({
+    let client = await this.clientRepository.findOne({ where: { documentId } });
+
+    if (!client) {
+      client = this.clientRepository.create({
         documentId,
         documentType,
         name: 'Cliente Teste',
         active: true,
         balance: 100,
         limit: 0,
-        planType: 'prepaid',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }).save();
+        planType: PlanType.PREPAID,
+      });
+
+      await this.clientRepository.save(client);
+    }
 
     const payload = { sub: client.id };
     const token = this.jwtService.sign(payload);
 
     return {
       token,
-      client
+      client,
     };
   }
 }

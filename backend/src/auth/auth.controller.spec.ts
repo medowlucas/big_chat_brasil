@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AuthRequestDto, DocumentType } from './dto/auth-request.dto/auth-request.dto';
+import { AuthRequest } from './dto/auth-request.dto';
 import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
+import { DocumentType } from 'src/enums/document-type.enum';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -25,7 +26,7 @@ describe('AuthController', () => {
   });
 
   it('should return a token on successful login', () => {
-    const loginRequest: AuthRequestDto = {
+    const loginRequest: AuthRequest = {
       documentId: '12345678901',
       documentType: DocumentType.CPF,
     };
