@@ -5,6 +5,8 @@ services:
     container_name: backend
     ports:
       - "3001:3001"
+    networks:
+      - my-network
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -16,10 +18,13 @@ services:
       - DB_PASSWORD=password
       - DB_NAME=big_chat_db
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=user
+      - RABBITMQ_PASSWORD=password
       - RABBITMQ_PORT=5672
     command: npm run start:dev
     depends_on:
       - db
+      - rabbitmq
 
   frontend:
     build:
@@ -27,6 +32,8 @@ services:
     container_name: frontend
     ports:
       - "3000:3000"
+    networks:
+      - my-network
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -44,17 +51,29 @@ services:
       POSTGRES_DB: big_chat_db
     ports:
       - "5432:5432"
+    networks:
+      - my-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - my-network
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   postgres_data:
   rabbitmq_data:
+
+networks:
+  my-network:
+    driver: bridge
