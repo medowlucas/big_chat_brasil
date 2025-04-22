@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <App />
       </AuthProvider>
-      <Toaster position="top-right" richColors expand />
+      <Toaster position="top-center" richColors />
     </ThemeProvider>
   </React.StrictMode>
 );

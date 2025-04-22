@@ -10,22 +10,52 @@ import {
   Box,
   MenuItem,
   Alert,
+  CircularProgress,
 } from '@mui/material';
+import { AuthRequest } from '../models/auth';
 
 export const Login = () => {
   const [documentId, setDocumentId] = useState('');
   const [documentType, setDocumentType] = useState<'CPF' | 'CNPJ'>('CPF');
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleDocumentIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cleanedInput = e.target.value.replace(/\D/g, '');
+
+    setDocumentId(cleanedInput);
+  };
+
+  const validateDocument = (docId: string, docType: 'CPF' | 'CNPJ') => {
+    if (docType === 'CPF') {
+      return docId.length === 11;
+    } else {
+      return docId.length === 14;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateDocument(documentId, documentType)) {
+      setError('CPF ou CNPJ inválido. Verifique o número.');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+
+    const authRequest: AuthRequest = { documentId, documentType };
+
     try {
-      await login(documentId, documentType);
+      await login(authRequest);
       navigate('/');
     } catch (err) {
       setError('Erro ao fazer login. Verifique seus dados.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,8 +77,7 @@ export const Login = () => {
           </Typography>
 
           <form onSubmit={handleSubmit}>
-
-          <TextField
+            <TextField
               select
               label="Tipo de documento"
               fullWidth
@@ -65,8 +94,11 @@ export const Login = () => {
               fullWidth
               margin="normal"
               value={documentId}
-              onChange={(e) => setDocumentId(e.target.value)}
+              onChange={handleDocumentIdChange}
               required
+              inputProps={{
+                maxLength: documentType === 'CPF' ? 11 : 14,
+              }}
             />
 
             {error && (
@@ -81,8 +113,9 @@ export const Login = () => {
               color="primary"
               fullWidth
               sx={{ mt: 3 }}
+              disabled={loading}
             >
-              Entrar
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Entrar'}
             </Button>
           </form>
         </CardContent>

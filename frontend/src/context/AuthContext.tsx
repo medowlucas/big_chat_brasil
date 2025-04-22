@@ -1,20 +1,12 @@
-import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-
-interface Client {
-  id: string;
-  name: string;
-  documentId: string;
-  documentType: 'CPF' | 'CNPJ';
-  balance?: number;
-  limit?: number;
-  planType: 'prepaid' | 'postpaid';
-  active: boolean;
-}
+import { createContext, useState, useContext, ReactNode, useMemo } from 'react';
+import { toast } from 'sonner';
+import { AuthRequest, AuthResponse } from '../models/auth';
+import { loginRequest } from '../api/auth';
 
 interface AuthContextProps {
   token: string | null;
-  client: Client | null;
-  login: (documentId: string, documentType: 'CPF' | 'CNPJ') => Promise<void>;
+  client: AuthResponse['client'] | null;
+  login: (authRequest: AuthRequest) => Promise<AuthResponse>;
   logout: () => void;
 }
 
@@ -22,25 +14,26 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
-  const [client, setClient] = useState<Client | null>(() => {
+  const [client, setClient] = useState<AuthResponse['client'] | null>(() => {
     const storedClient = localStorage.getItem('client');
     return storedClient ? JSON.parse(storedClient) : null;
   });
 
-  const login = async (documentId: string, documentType: 'CPF' | 'CNPJ') => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ documentId, documentType }),
-    });
+  const login = async (authRequest: AuthRequest): Promise<AuthResponse> => {
+    try {
+      const data = await loginRequest(authRequest);
 
-    if (!response.ok) throw new Error('Login inválido');
-    const data = await response.json();
+      setToken(data.token);
+      setClient(data.client);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('client', JSON.stringify(data.client));
 
-    setToken(data.token);
-    setClient(data.client);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('client', JSON.stringify(data.client));
+      toast.success('Login bem-sucedido!');
+      return data;
+    } catch (error) {
+      toast.error('Erro ao fazer login. Verifique seus dados.');
+      throw error;
+    }
   };
 
   const logout = () => {
@@ -48,14 +41,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setClient(null);
     localStorage.removeItem('token');
     localStorage.removeItem('client');
+
+    toast.success('Você foi desconectado com sucesso!');
   };
 
+  const contextValue = useMemo(() => ({
+    token,
+    client,
+    login,
+    logout,
+  }), [token, client]);
+
   return (
-    <AuthContext.Provider value={{ token, client, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
-
 
 export const useAuth = () => useContext(AuthContext);
