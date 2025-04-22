@@ -7,7 +7,7 @@ Projeto fullstack do desafio técnico da Big Chat Brasil (BCB). Esta plataforma 
 ## 🧩 Tecnologias Utilizadas
 
 - **Frontend:** React
-- **Backend:** NestJS com TypeScript
+- **Backend:** NestJS
 - **Banco de Dados:** PostgreSQL
 - **Mensageria:** RabbitMQ
 - **Containerização:** Docker e Docker Compose
@@ -27,10 +27,12 @@ Projeto fullstack do desafio técnico da Big Chat Brasil (BCB). Esta plataforma 
 git clone https://github.com/seu-usuario/big-chat-brasil.git
 cd big-chat-brasil
 ```
+
 ### 3. Execute com Docker Compose
 ```bash
 docker-compose up -d
 ```
+
 O Docker Compose irá subir os seguintes serviços:
 
 PostgreSQL (porta 5432)
@@ -42,9 +44,10 @@ Backend (porta 3001)
 Frontend (porta 3000)
 
 ### 📱 Funcionalidades Implementadas
-CRUD de clientes
 
-Autenticação simples
+CRUD de clientes, conversas e mensagens
+
+Autenticação JWT simples
 
 Envio de mensagens (com suporte a prioridade)
 
@@ -55,41 +58,41 @@ Integração front-back com feedback de envio
 Docker Compose para execução completa
 
 ### 🧠 Decisões Técnicas
-Uso do RabbitMQ para simular filas de mensagens com prioridade.
+Uso do RabbitMQ para filas de mensagens com prioridade.
 
-Separação clara entre frontend e backend.
+Autenticação simplificada.
 
-Autenticação simplificada para foco no fluxo de mensagens.
+Persistência de dados com PostgreSQL via TypeORM.
 
-Simulação de envio de mensagens com logging e delay artificial.
+UI com suporte a mobile e desktop.
 
-Persistência de dados com PostgreSQL via TypeORM/Prisma (ajustável).
+### 📌 Melhorias Futuras
+Gerenciar filas de mensagens com o RabbitMQ
 
-UI básica mas funcional com suporte a mobile e desktop.
+Implementar Menu administrativo para controle de saldo
 
-### 📌 Possíveis Melhorias Futuras
-Implementar dashboard administrativo
-
-Melhorar autenticação (JWT, OAuth)
+Implmentar Guard na autenticação JWT
 
 Adicionar cache (Redis) para melhorar performance
 
-Persistir filas de mensagens em disco
-
-Adicionar testes automatizados (Jest + Supertest)
+Adicionar testes automatizados (Jest)
 
 Monitoramento com logs estruturados
 
+Controle de saldo e enums no Message Module
+
 ### 📄 Como Testar Manualmente
+
 Acesse o frontend: http://localhost:3000
 
-Faça login com um CPF/CNPJ válido
+Faça login com um CPF/CNPJ
 
 Envie mensagens com prioridade "normal" ou "urgente"
 
 Visualize o histórico de mensagens e status
 
 ### 📦 Estrutura de Pastas
+
 ```bash
 big-chat-brasil/
 ├── backend/     # Backend NestJS
@@ -97,7 +100,9 @@ big-chat-brasil/
 ├── docker-compose.yml
 └── README.md
 ```
+
 ### 📚 Biblitecas
+
 ```bash
 Frontend:
 sonnar - toast

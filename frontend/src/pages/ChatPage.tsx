@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { ChatList } from '../components/chat/ChatList';
-import { ChatWindow } from '../components/chat/ChatWindow';
+import { ChatList } from '../components/Chat/ChatList';
 import { HamburgerMenu } from '../components/HamburgerMenu';
 import { useState } from 'react';
+import ChatWindow from '../components/Chat/ChatWindow/ChatWindow';
 
 export const ChatPage = () => {
   const [selectedConversation, setSelectedConversation] = useState<any>(null);

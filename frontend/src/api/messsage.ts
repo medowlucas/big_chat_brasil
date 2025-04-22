@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   SendMessageRequest,
   SendMessageResponse,
-  MessageResponse
+  MessageResponse,
 } from '../models/messsage';
 
 const API = axios.create({
@@ -13,11 +13,11 @@ const API = axios.create({
 });
 
 export const getMessages = async (conversationId: string): Promise<MessageResponse[]> => {
-  const { data } = await API.get(`/conversations/${conversationId}/messages`);
+  const { data } = await API.get(`/messages/${conversationId}`); 
   return data;
 };
 
 export const sendMessage = async (payload: SendMessageRequest): Promise<SendMessageResponse> => {
-  const { data } = await API.post('/messages', payload);
+  const { data } = await API.post('/messages/send', payload); 
   return data;
 };

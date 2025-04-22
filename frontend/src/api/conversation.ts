@@ -9,7 +9,7 @@ const API = axios.create({
 });
 
 export const getConversations = async (clientId: string): Promise<ConversationResponse[]> => {
-  const response = await API.get(`/conversations/get/${clientId}`);
+  const response = await API.get(`/conversations/${clientId}`);
   return Array.isArray(response.data) ? response.data : [];
 };
 

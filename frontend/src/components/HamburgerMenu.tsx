@@ -45,9 +45,9 @@ export const HamburgerMenu = () => {
                     <ListItemIcon><ChatIcon /></ListItemIcon>
                     <ListItemText primary="Conversas" />
                 </ListItem>
-                <ListItem onClick={() => handleNavigation('/configuracoes')} sx={{ cursor: 'pointer' }}>
+                <ListItem sx={{ cursor: 'not-allowed' }}>
                     <ListItemIcon><SettingsIcon /></ListItemIcon>
-                    <ListItemText primary="Configurações" />
+                    <ListItemText primary="Configurações (em breve)" />
                 </ListItem>
                 <ListItem
                     onClick={() => {

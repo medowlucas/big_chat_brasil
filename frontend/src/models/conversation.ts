@@ -6,4 +6,3 @@ export interface ConversationResponse {
     lastMessageTime: string;
     unreadCount: number;
   }
-  
