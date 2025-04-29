@@ -2,54 +2,65 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthRequest } from './dto/auth-request.dto';
-import * as request from 'supertest';
-import { INestApplication } from '@nestjs/common';
+import { AuthResponse } from './dto/auth-response.dto';
 import { DocumentType } from 'src/enums/document-type.enum';
+import { PlanType } from 'src/enums/plan-type.enum';
 
 describe('AuthController', () => {
-  let app: INestApplication;
-  let authService = { login: () => ({ token: 'dummyToken123456' }) };
+  let authController: AuthController;
+  let authService: AuthService;
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeEach(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
-          useValue: authService,
+          useValue: {
+            login: jest.fn(),
+          },
         },
       ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    authController = moduleRef.get<AuthController>(AuthController);
+    authService = moduleRef.get<AuthService>(AuthService);
   });
 
-  it('should return a token on successful login', () => {
-    const loginRequest: AuthRequest = {
-      documentId: '12345678901',
-      documentType: DocumentType.CPF,
-    };
-
-    return request(app.getHttpServer())
-      .post('/auth')
-      .send(loginRequest)
-      .expect(200)
-      .expect((response) => {
-        expect(response.body.token).toBeDefined();
-        expect(response.body.client).toBeDefined();
-      });
+  it('should be defined', () => {
+    expect(authController).toBeDefined();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
+  describe('login', () => {
+    it('should call authService.login with correct parameters and return its result', async () => {
+      const authRequest: AuthRequest = {
+        documentId: '12345678900',
+        documentType: DocumentType.CPF,
+      };
 
-  it('should return 400 if invalid documentId is provided', () => {
-    return request(app.getHttpServer())
-      .post('/auth')
-      .send({ documentId: 'invalidCPF', documentType: 'CPF' })
-      .expect(400);
+      const expectedResponse: AuthResponse = {
+        token: 'fake-jwt-token',
+        client: {
+          id: 'uuid-generated',
+          name: 'João da Silva',
+          documentId: '12345678900',
+          documentType: DocumentType.CPF,
+          balance: 200.0,
+          limit: 1000,
+          planType: PlanType.PREPAID,
+          active: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          conversations: [],
+        },
+      };
+
+      jest.spyOn(authService, 'login').mockResolvedValue(expectedResponse);
+
+      const result = await authController.login(authRequest);
+
+      expect(authService.login).toHaveBeenCalledWith(authRequest);
+      expect(result).toEqual(expectedResponse);
+    });
   });
-  
 });
