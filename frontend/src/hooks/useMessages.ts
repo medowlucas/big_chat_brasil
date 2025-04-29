@@ -33,7 +33,23 @@ export const useMessages = (conversationId: string) => {
     try {
       const fullPayload = { ...payload, conversationId };
       const response = await sendMessage(fullPayload);
-      await fetchMessages();
+
+      const newMessage: MessageResponse = {
+        id: response.id,
+        conversationId: conversationId,
+        content: payload.content,
+        sentBy: {
+          id: localStorage.getItem('clientId') || '',
+          type: 'user',
+        },
+        timestamp: response.timestamp,
+        priority: payload.priority,
+        status: response.status,
+        cost: response.cost,
+      };
+
+      setMessages(prev => [...prev, newMessage]);
+
       toast.success('Mensagem enviada com sucesso!');
       return response;
     } catch (err: unknown) {
@@ -52,6 +68,7 @@ export const useMessages = (conversationId: string) => {
 
   return {
     messages,
+    setMessages,
     loading,
     error,
     sendMessage: handleSendMessage,

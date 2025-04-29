@@ -59,10 +59,10 @@ const MessageList = ({ messages, loading, error }: MessageListProps) => {
                 <Typography variant="body2">{msg.content}</Typography>
               </Box>
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="caption" color="gray">
+                <Typography variant="caption" color="#333">
                   {msg.status}
                 </Typography>
-                <Typography variant="caption" color="gray">
+                <Typography variant="caption" color="#333">
                   {time}
                 </Typography>
               </Box>

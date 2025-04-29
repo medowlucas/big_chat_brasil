@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { useMessages } from '../../../hooks/useMessages';
 import MessageList from './MessageList';
@@ -14,6 +14,7 @@ type ChatWindowProps = {
 const ChatWindow = ({ conversation }: ChatWindowProps) => {
   const [input, setInput] = useState('');
   const [priority, setPriority] = useState<'normal' | 'urgent'>('normal');
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   const {
     messages,
@@ -35,6 +36,12 @@ const ChatWindow = ({ conversation }: ChatWindowProps) => {
 
   const getCostLabel = (priority: 'normal' | 'urgent') =>
     priority === 'urgent' ? 'Enviar (R$0,50)' : 'Enviar (R$0,25)';
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [messages]);
 
   if (!conversation) {
     return (
@@ -58,6 +65,8 @@ const ChatWindow = ({ conversation }: ChatWindowProps) => {
 
       <Box flex={1} overflow="auto">
         <MessageList messages={messages} loading={loading} error={error} />
+           {/* Referência para rolar até o final */}
+           <div ref={messageEndRef} />
       </Box>
 
       <Box p={2} borderTop="1px solid #444">
