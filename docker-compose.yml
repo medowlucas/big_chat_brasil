@@ -24,7 +24,6 @@ services:
     command: npm run start:dev
     depends_on:
       - db
-      - rabbitmq
 
   frontend:
     build:
@@ -55,20 +54,6 @@ services:
       - my-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  rabbitmq:
-    image: rabbitmq:management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - my-network
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   postgres_data:

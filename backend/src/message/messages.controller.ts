@@ -11,7 +11,7 @@ export class MessagesController {
   @Post('send')
   @ApiResponse({ status: 200, description: 'Mensagem enviada com sucesso.' })
   async sendMessage(@Body() sendMessageRequest: SendMessageRequest) {
-    return this.messagesService.sendMessage(sendMessageRequest);
+    return this.messagesService.enqueueMessage(sendMessageRequest);
   }
 
   @Get(':conversationId')

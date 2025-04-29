@@ -4,7 +4,7 @@ import { Client } from './entities/client.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConversationsModule } from './conversation/conversations.module';
 import { MessagesModule } from './message/messages.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from './client/clients.module';
 
 @Module({
   imports: [
@@ -22,20 +22,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     TypeOrmModule.forFeature([Client]),
     ConversationsModule,
     MessagesModule,
-    // ClientsModule.register([
-    //   {
-    //     name: 'RABBITMQ_SERVICE',
-    //     transport: Transport.RMQ,
-    //     options: {
-    //       urls: [`amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`],
-    //       queue: 'conversations_queue',
-    //       queueOptions: {
-    //         durable: true,
-    //       },
-    //       noAck: true,
-    //     },
-    //   },
-    // ]),
+    ClientsModule
   ],
 })
 export class AppModule {}
