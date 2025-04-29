@@ -56,9 +56,9 @@ describe('MessagesController', () => {
 
       const enqueueMessageSpy = jest.spyOn(messagesService, 'enqueueMessage').mockResolvedValue(response);
 
-      const result = await messagesController.sendMessage(sendMessageRequest);
+      const result = await messagesController.sendMessage(sendMessageRequest, 'user-id');
 
-      expect(enqueueMessageSpy).toHaveBeenCalledWith(sendMessageRequest);
+      expect(enqueueMessageSpy).toHaveBeenCalledWith(sendMessageRequest, 'user-id');
       expect(result).toEqual(response);
     });
   });
