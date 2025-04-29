@@ -55,7 +55,7 @@ export class MessagesService {
   }
 
   // Enfileirar mensagem para envio
-  async enqueueMessage(sendMessageRequest: SendMessageRequest): Promise<MessageResponse> {
+  async enqueueMessage(sendMessageRequest: SendMessageRequest, userId): Promise<MessageResponse> {
     const { conversationId, recipientId, content, priority } = sendMessageRequest;
 
     // Verifica se a conversa existe
@@ -68,7 +68,7 @@ export class MessagesService {
     const message = this.messageRepository.create({
       conversation,
       content,
-      sentBy: { id: recipientId, type: 'user' },
+      sentBy: { id: userId, type: 'user' },
       priority,
       timestamp: new Date(),
       status: 'queued', // Marca a mensagem como enfileirada
@@ -159,6 +159,6 @@ export class MessagesService {
 
   // Simula o envio real da mensagem (aqui você pode integrar com sistemas externos)
   private async sendMessage(message: Message) {
-    console.info(`Enviando mensagem: ${message.content}, prioridade: ${message.priority}`);
+    console.info(`Enviando mensagem: ${message.sentBy.id}, prioridade: ${message.priority}`);
   }
 }

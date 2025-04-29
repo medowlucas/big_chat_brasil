@@ -32,7 +32,7 @@ export class AuthService {
         planType: PlanType.PREPAID,
       });
 
-      await this.clientRepository.save(client);
+      client = await this.clientRepository.save(client);
     }
 
     const payload = { sub: client.id };

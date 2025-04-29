@@ -14,9 +14,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     const client = await this.clientsService.findById(payload.sub);
+
     if (!client) {
       throw new Error('Client not found');
     }
-    return client;
+
+    return {
+      id: client.id,
+      documentId: client.documentId,
+      name: client.name,
+      active: client.active,
+    };
   }
 }

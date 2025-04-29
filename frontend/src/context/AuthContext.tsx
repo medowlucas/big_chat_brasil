@@ -22,11 +22,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (authRequest: AuthRequest): Promise<AuthResponse> => {
     try {
       const data = await loginRequest(authRequest);
+ 
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('client', JSON.stringify(data.client));
 
       setToken(data.token);
       setClient(data.client);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('client', JSON.stringify(data.client));
 
       toast.success('Login bem-sucedido!');
       return data;
