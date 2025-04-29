@@ -37,17 +37,21 @@ O Docker Compose irá subir os seguintes serviços:
 
 PostgreSQL (porta 5432)
 
-RabbitMQ + dashboard (portas 5672, 15672)
-
 Backend (porta 3001)
 
 Frontend (porta 3000)
+
+### 4. Swagger da da API
+http://localhost:3001/api/
+
+### 5. Frontend
+http://localhost:3000
 
 ### 📱 Funcionalidades Implementadas
 
 CRUD de clientes, conversas e mensagens
 
-Autenticação JWT simples
+Autenticação JWT
 
 Envio de mensagens (com suporte a prioridade)
 
@@ -58,9 +62,6 @@ Integração front-back com feedback de envio
 Docker Compose para execução completa
 
 ### 🧠 Decisões Técnicas
-Uso do RabbitMQ para filas de mensagens com prioridade.
-
-Autenticação simplificada.
 
 Persistência de dados com PostgreSQL via TypeORM.
 
@@ -71,25 +72,23 @@ Gerenciar filas de mensagens com o RabbitMQ
 
 Implementar Menu administrativo para controle de saldo
 
-Implmentar Guard na autenticação JWT
-
 Adicionar cache (Redis) para melhorar performance
 
-Adicionar testes automatizados (Jest)
+Implementar login completo
 
 Monitoramento com logs estruturados
 
-Controle de saldo e enums no Message Module
+Controle de enums no Message Module
 
-### 📄 Como Testar Manualmente
+Controle de status e saldo via socket
+
+### 📄 Como Testar
 
 Acesse o frontend: http://localhost:3000
 
-Faça login com um CPF/CNPJ
+Faça login com um CPF/CNPJ (será criado um usuário automaticamente)
 
 Envie mensagens com prioridade "normal" ou "urgente"
-
-Visualize o histórico de mensagens e status
 
 ### 📦 Estrutura de Pastas
 
@@ -111,7 +110,6 @@ axios - integração API
 router-dom - controle de acesso
 
 Backend:
-ampqlib - integração filas
 swagger - documentação rotas
 jest - testes unitários
 typeORM - conexão postgres

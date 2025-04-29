@@ -12,8 +12,8 @@ import { ClientsModule } from 'src/client/clients.module';
   imports: [
     TypeOrmModule.forFeature([Client]),
     JwtModule.register({
-      secret: 'yourSecretKey',
-      signOptions: { expiresIn: '1d' },
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ClientsModule

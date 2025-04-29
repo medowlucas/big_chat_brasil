@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: [process.env.FRONTEND_URL],
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: false,
@@ -19,13 +19,14 @@ async function bootstrap() {
     .setTitle('API Docs')
     .setDescription('Documentação da API backend')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   await app.listen(3001);
-  console.log('[HTTP] Server running at http://localhost:3001 ✅');
+  console.log('[HTTP] Server running ✅');
 }
 
 bootstrap();

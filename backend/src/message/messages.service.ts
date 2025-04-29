@@ -115,12 +115,10 @@ export class MessagesService {
     this.isProcessing = true;
 
     while (this.messageQueue.length > 0) {
-      // Pega o próximo item da fila, mas pode ser undefined
       const nextMessage = this.messageQueue.shift();
 
-      // Verifica se o item é válido
       if (!nextMessage) {
-        continue; // Caso seja undefined, continue o loop
+        continue;
       }
 
       const { message } = nextMessage;
@@ -130,15 +128,15 @@ export class MessagesService {
         status: 'processing',
       });
 
-      // Simula o envio da mensagem (aqui você pode adicionar a lógica de envio real)
+      // Simula o envio da mensagem
       await this.sendMessage(message);
 
-      // Após o envio, marca a mensagem como "enviada"
+      // Marca a mensagem como "enviada"
       await this.messageRepository.update(message.id, {
         status: 'sent',
       });
 
-      // controle de saldo e limite
+      // Controle de saldo e limite
       let client = await this.clientRepository.findOne({ where: { id: message.sentBy.id } });
       if (client) {
         if (client.planType === 'prepaid') {
